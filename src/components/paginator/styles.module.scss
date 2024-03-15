@@ -1,0 +1,61 @@
+.pagination {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  border-radius: 5px;
+  color: var(--text);
+
+  &__item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    width: 20px;
+    cursor: pointer;
+    padding: 0.3rem 0.5rem;
+    margin: 0 0.2rem;
+    font-size: large;
+    border-radius: 10px;
+
+    &.active {
+      color: var(--text);
+      background-color: var(--primary);
+    }
+
+    &:hover {
+      @extend .active;
+    }
+  }
+
+  &__dotted {
+    @extend .pagination__item;
+    cursor: default;
+
+    &:hover {
+      background-color: transparent;
+    }
+  }
+}
+
+button.arrowButton {
+  background-color: transparent;
+  border-width: 0;
+  font-family: inherit;
+  font-size: inherit;
+  font-style: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  padding: 0;
+  cursor: pointer;
+  margin: 0 0.5rem;
+  color: var(--active);
+
+  &:disabled {
+    color: var(--disabled);
+  }
+
+  &:hover:not(:disabled) {
+    opacity: 0.7;
+  }
+}

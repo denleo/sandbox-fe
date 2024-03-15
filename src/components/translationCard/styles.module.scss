@@ -1,0 +1,166 @@
+.card {
+  cursor: default;
+  width: fit-content;
+  min-width: fit-content;
+  display: flex;
+  flex-direction: column;
+  margin: 1rem;
+  background-color: var(--primary);
+  border-radius: 18px;
+  box-shadow: var(--shadow-card);
+  position: relative;
+  top: 0;
+  transition: top cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.5s;
+
+  &:hover {
+    top: -0.7rem;
+  }
+
+  i:hover {
+    color: var(--active-2);
+  }
+
+  &__top {
+    display: flex;
+    align-items: center;
+    justify-content: end;
+    color: var(--active-2);
+    width: 100%;
+    height: 30px;
+
+    i {
+      cursor: pointer;
+      padding: 0 0.8rem;
+    }
+  }
+
+  &__content {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem 2rem;
+    padding-top: 1rem;
+  }
+
+  &__footer {
+    border-top: 1px var(--disabled) solid;
+    color: var(--active);
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    width: 100%;
+    height: 30px;
+
+    i {
+      cursor: pointer;
+      width: 16px;
+      height: 16px;
+    }
+  }
+}
+
+.wordTitle {
+  color: var(--text);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: x-large;
+  margin-bottom: 1rem;
+
+  &:hover {
+    color: var(--active);
+  }
+}
+
+.translationsList {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+
+  &__item {
+    display: flex;
+    flex-direction: column;
+    filter: blur(5px);
+  }
+}
+
+.partOfSpeech {
+  color: var(--white);
+  border-radius: 0.8rem;
+  margin-bottom: 0.5rem;
+  padding: 0.25rem 0.8rem;
+  text-align: center;
+  width: fit-content;
+  align-self: center;
+  font-size: small;
+
+  &:hover {
+    opacity: 0.8;
+  }
+}
+
+.translations {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  color: var(--text);
+  font-size: medium;
+  justify-content: center;
+  align-items: center;
+
+  &__word {
+    cursor: copy;
+    &:hover {
+      opacity: 0.8;
+    }
+  }
+}
+
+.tooltip {
+  visibility: hidden;
+  width: 120px;
+  background-color: var(--primary);
+  color: var(--text);
+  text-align: center;
+  font-size: small;
+  padding: 5px 0;
+  border-radius: 5px;
+
+  /* Position the tooltip text */
+  position: absolute;
+  z-index: 100;
+  bottom: -40px;
+  left: 50%;
+  margin-left: -60px;
+
+  /* Fade in tooltip */
+  opacity: 0;
+  transition: opacity 0.5s;
+}
+
+.blurSetting {
+  padding-left: 0.8rem;
+}
+
+.deleteTranslation {
+  padding-right: 0.8rem;
+}
+
+.lastSeenAt {
+  position: relative;
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}
+
+.createdAt {
+  position: relative;
+
+  &:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+  }
+}

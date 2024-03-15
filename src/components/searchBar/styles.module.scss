@@ -1,0 +1,62 @@
+.wrap {
+  border-radius: 10px 10px 10px 10px;
+  width: 100%;
+  max-width: 300px;
+}
+
+.search {
+  width: 100%;
+  position: relative;
+  display: flex;
+}
+
+.searchTerm {
+  width: 100%;
+  border: 2px solid var(--primary);
+  border-right: none;
+  padding: 7px;
+  height: 20px;
+  border-radius: 10px 0 0 10px;
+  outline: none;
+  color: var(--text);
+  background-color: var(--bg);
+  font-weight: 500;
+  font-size: small;
+
+  &:focus {
+    font-size: medium;
+  }
+}
+
+.searchButton {
+  width: 40px;
+  height: 38px;
+  border: 1px solid var(--primary);
+  background: var(--primary);
+  text-align: center;
+  color: var(--white);
+  border-radius: 0 10px 10px 0;
+  cursor: pointer;
+  font-size: 21px;
+
+  > i {
+    color: var(--active);
+    animation: blink 3s ease-in-out infinite; /* Использование анимации со свойствами: продолжительность, функция временного интервала, итерация */
+
+    &:hover {
+      animation: none;
+    }
+  }
+}
+
+@keyframes blink {
+  0% {
+    opacity: 1;
+  } /* Начальное состояние - полная видимость */
+  50% {
+    opacity: 0.3;
+  } /* Половина анимации - невидимость */
+  100% {
+    opacity: 1;
+  } /* Завершение анимации - полная видимость */
+}

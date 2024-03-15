@@ -1,0 +1,48 @@
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 100%;
+  font-size: 1rem;
+  padding: 0.4rem 2.5rem 0.4rem 0.6rem;
+  background-color: var(--primary);
+  border: 0.15rem solid var(--primary);
+  border-radius: 0.2rem;
+  color: var(--text);
+  cursor: pointer;
+
+  option:disabled {
+    color: var(--active);
+  }
+
+  &:hover,
+  &:focus {
+    border-color: var(--active);
+  }
+}
+
+.selectContainer {
+  border-radius: 1rem;
+  position: relative;
+
+  &::after {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    pointer-events: none;
+    border-left: 0.3rem solid transparent;
+    border-right: 0.3rem solid transparent;
+    border-bottom: 0.3rem solid var(--text);
+    top: 35%;
+  }
+
+  &::before {
+    content: "";
+    position: absolute;
+    right: 1rem;
+    pointer-events: none;
+    border-left: 0.3rem solid transparent;
+    border-right: 0.3rem solid transparent;
+    border-top: 0.3rem solid var(--text);
+    top: 60%;
+  }
+}
