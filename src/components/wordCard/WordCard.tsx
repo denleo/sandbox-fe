@@ -13,7 +13,7 @@ function WordCard({
   ) => void;
 }) {
   return (
-    <div className={styles.wordCard}>
+    <article className={styles.wordCard}>
       <h3
         className={styles.partOfSpeech}
         style={{
@@ -26,19 +26,19 @@ function WordCard({
         {translation.word}
         {translation.transcription ? ` (${translation.transcription})` : ""}
       </h4>
-      <div className={styles.translationResultsSection}>
+      <section className={styles.translationResultsSection}>
         {translation.translations.map((x) => (
           <div
             className={styles.translationResult}
             key={x.text}
             onClick={() => addTranslationHandler(translation, x.text)}
           >
-            <div className={styles.translationText}>{x.text}</div>
-            <div className={styles.frequencyBadge}>{x.frequency}</div>
+            <span className={styles.translationText}>{x.text}</span>
+            <span className={styles.frequencyBadge}>{x.frequency}</span>
           </div>
         ))}
-      </div>
-    </div>
+      </section>
+    </article>
   );
 }
 

@@ -52,9 +52,9 @@ function TranslationCard({ translation, onRemove }: TranslationCardProps) {
   }
 
   return (
-    <div className={styles.card}>
+    <article className={styles.card}>
       <section className={styles.card__content}>
-        <div className={styles.wordTitle}>{capitalize(model.word)}</div>
+        <h1 className={styles.wordTitle}>{capitalize(model.word)}</h1>
         <div className={styles.translationsList}>
           {Object.entries(groupedTranslations).map(
             ([partOfSpeech, translations]) => (
@@ -89,7 +89,7 @@ function TranslationCard({ translation, onRemove }: TranslationCardProps) {
           )}
         </div>
       </section>
-      <section className={styles.card__footer}>
+      <footer className={styles.card__footer}>
         <div className={styles.blurSetting}>
           <i
             className={`fa-solid ${
@@ -117,8 +117,8 @@ function TranslationCard({ translation, onRemove }: TranslationCardProps) {
         >
           <i className="fa-solid fa-trash"></i>
         </div>
-      </section>
-    </div>
+      </footer>
+    </article>
   );
 }
 

@@ -7,6 +7,8 @@ interface ISearchBar {
   placeholder?: string;
   width: string;
   initialValue?: string;
+  options?: string[];
+  debounceInterval?: number;
 }
 
 function SearchBar({
@@ -14,18 +16,24 @@ function SearchBar({
   initialValue = "",
   placeholder,
   width,
+  options,
+  debounceInterval = 500,
 }: ISearchBar) {
   const [input, setInput] = useState(initialValue);
-  const debouncedSearch = useMemo(() => debounce(onSearch, 500), [onSearch]);
+  const debouncedSearch = useMemo(
+    () => debounce(onSearch, debounceInterval),
+    [onSearch, debounceInterval]
+  );
 
   useEffect(() => {
     debouncedSearch(input);
   }, [debouncedSearch, input]);
 
   return (
-    <div className={styles.wrap} style={{ maxWidth: width }}>
+    <search className={styles.wrap} style={{ maxWidth: width }}>
       <div className={styles.search}>
         <input
+          list="search-options"
           value={input}
           className={styles.searchTerm}
           type="text"
@@ -35,15 +43,22 @@ function SearchBar({
             if (e.key === "Enter") onSearch(input);
           }}
         />
+        {options && (
+          <datalist id="search-options">
+            {options.map((x) => (
+              <option key={x} value={x} />
+            ))}
+          </datalist>
+        )}
         <button
-          type="submit"
+          type="button"
           className={styles.searchButton}
           onClick={() => onSearch(input)}
         >
           <i className="fa fa-search fa-sm"></i>
         </button>
       </div>
-    </div>
+    </search>
   );
 }
 

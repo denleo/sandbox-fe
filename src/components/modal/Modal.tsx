@@ -12,17 +12,17 @@ type ModalProps = {
 function Modal({ onClose, title, maxWidth = "450px", children }: ModalProps) {
   return createPortal(
     <div className={styles.background} onClick={onClose}>
-      <div
+      <article
         className={styles.modal}
         onClick={(e) => e.stopPropagation()}
         style={{ maxWidth: maxWidth }}
       >
-        <div className={styles.modal__header}>
+        <header className={styles.modal__header}>
           <h3 className={styles.modal__header__title}>{title}</h3>
           <i className="fa-regular fa-circle-xmark fa-lg" onClick={onClose}></i>
-        </div>
+        </header>
         <section className={styles.modal__content}>{children}</section>
-      </div>
+      </article>
     </div>,
     document.getElementById("root")!
   );
