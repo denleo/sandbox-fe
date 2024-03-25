@@ -6,10 +6,16 @@ interface ISearchBar {
   onSearch: (value: string) => void;
   placeholder?: string;
   width: string;
+  initialValue?: string;
 }
 
-function SearchBar({ onSearch, placeholder, width }: ISearchBar) {
-  const [input, setInput] = useState("");
+function SearchBar({
+  onSearch,
+  initialValue = "",
+  placeholder,
+  width,
+}: ISearchBar) {
+  const [input, setInput] = useState(initialValue);
   const debouncedSearch = useMemo(() => debounce(onSearch, 500), [onSearch]);
 
   useEffect(() => {
@@ -20,6 +26,7 @@ function SearchBar({ onSearch, placeholder, width }: ISearchBar) {
     <div className={styles.wrap} style={{ maxWidth: width }}>
       <div className={styles.search}>
         <input
+          value={input}
           className={styles.searchTerm}
           type="text"
           placeholder={placeholder}

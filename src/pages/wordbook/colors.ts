@@ -8,6 +8,8 @@ export const partOfSpeechColors = {
   Predicative: "#C15B4E",
   //"Артикль / детерминатив": "#B9A898",
   Participle: "#4A2668",
+  Particle: "#86A59C",
+  Pronoun: "#ECA72C",
 };
 
 export const langColors = {

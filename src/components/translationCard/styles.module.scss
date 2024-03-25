@@ -10,7 +10,7 @@
   box-shadow: var(--shadow-card);
   position: relative;
   top: 0;
-  transition: top cubic-bezier(0.68, -0.55, 0.27, 1.55) 0.5s;
+  transition: top ease 0.5s;
 
   &:hover {
     top: -0.7rem;

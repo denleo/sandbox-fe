@@ -4,6 +4,7 @@ import { capitalize, groupBy } from "../../utils/utils";
 import { partOfSpeechColors } from "../../pages/wordbook/colors";
 import { useState } from "react";
 import { useToast } from "../toast/ToastProvider";
+import { useViewTranslationMutation } from "../../apis/wordbook/wordbookService";
 
 export type TranslationCardProps = {
   translation: TranslationDto;
@@ -11,18 +12,37 @@ export type TranslationCardProps = {
 };
 
 function TranslationCard({ translation, onRemove }: TranslationCardProps) {
+  const [model, setModel] = useState(translation);
   const [showTranslations, setShowTranslations] = useState(false);
+  const [viewTranslation] = useViewTranslationMutation();
   const showToast = useToast();
 
+  function handleTranslationView() {
+    viewTranslation({
+      translationId: model.id,
+    })
+      .unwrap()
+      .then((res) =>
+        setModel((state) => ({ ...state, lastViewed: res.lastViewed }))
+      )
+      .catch(() =>
+        showToast({
+          message: `Failed to save ${model.word} view time`,
+          type: "error",
+          timeout: 1500,
+        })
+      );
+  }
+
   const groupedTranslations = groupBy(
-    translation.translationResults,
+    model.translationResults,
     (x) => x.partOfSpeech
   );
 
   function handleCopyTranslation(e: React.MouseEvent) {
     const text = e.currentTarget.textContent;
     if (text && showTranslations) {
-      navigator.clipboard.writeText(`${translation.word} -> ${text}`);
+      navigator.clipboard.writeText(`${model.word} - ${text}`);
       showToast({
         message: "Translation copied to clipboard!",
         type: "info",
@@ -34,7 +54,7 @@ function TranslationCard({ translation, onRemove }: TranslationCardProps) {
   return (
     <div className={styles.card}>
       <section className={styles.card__content}>
-        <div className={styles.wordTitle}>{capitalize(translation.word)}</div>
+        <div className={styles.wordTitle}>{capitalize(model.word)}</div>
         <div className={styles.translationsList}>
           {Object.entries(groupedTranslations).map(
             ([partOfSpeech, translations]) => (
@@ -75,12 +95,15 @@ function TranslationCard({ translation, onRemove }: TranslationCardProps) {
             className={`fa-solid ${
               showTranslations ? "fa-eye" : "fa-eye-slash"
             }`}
-            onClick={() => setShowTranslations((x) => !x)}
+            onClick={() => {
+              setShowTranslations((x) => !x);
+              handleTranslationView();
+            }}
           ></i>
         </div>
         <div className={styles.lastSeenAt}>
           <i className="fa-regular fa-eye"></i>
-          <span className={styles.tooltip}>{translation.lastViewed}</span>
+          <span className={styles.tooltip}>{model.lastViewed}</span>
         </div>
         <div className={styles.createdAt}>
           <i className="fa-solid fa-calendar-plus"></i>
@@ -90,7 +113,7 @@ function TranslationCard({ translation, onRemove }: TranslationCardProps) {
         </div>
         <div
           className={styles.deleteTranslation}
-          onClick={() => onRemove(translation.id)}
+          onClick={() => onRemove(model.id)}
         >
           <i className="fa-solid fa-trash"></i>
         </div>

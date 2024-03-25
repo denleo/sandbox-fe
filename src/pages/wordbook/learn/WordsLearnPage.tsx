@@ -6,57 +6,98 @@ import {
 import TranslationCard from "../../../components/translationCard/TranslationCard";
 import SearchBar from "../../../components/searchBar/SearchBar";
 import Paginator from "../../../components/paginator/Paginator";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useDeleteTranslationMutation,
   useGetTranslationsQuery,
 } from "../../../apis/wordbook/wordbookService";
 import { Order } from "../../../apis/commonTypes";
 import Spinner from "../../../components/spinner/Spinner";
-import Select, { SelectItem } from "../../../components/select/Select";
+import Select from "../../../components/select/Select";
 import { partOfSpeechColors } from "../colors";
 import OrderToggler from "../../../components/orderToggler/OrderToggler";
 import Modal from "../../../components/modal/Modal";
 import TranslationLangOptions from "../explore/filters/TranslationLangOptions";
 import { Lang } from "../../../redux/translationSetup/types";
 import { useToast } from "../../../components/toast/ToastProvider";
+import { useSearchParams } from "react-router-dom";
+import DialogModal from "../../../components/dialogModal/DialogModal";
 
-function getDefaultQueryState(): GetTranslationsQuery {
+function deserializeQueryState(
+  searchParams: URLSearchParams
+): GetTranslationsQuery {
   return {
-    page: 1,
-    pageSize: 5,
-    orderBy: TranslationOrdering.CreatedAt,
-    order: Order.Descending,
-    sourceLang: Lang.English,
-    targetLang: Lang.Russian,
-    word: undefined,
-    partOfSpeech: undefined,
+    page: searchParams.has("page") ? +searchParams.get("page")! : 1,
+    pageSize: searchParams.has("pageSize") ? +searchParams.get("pageSize")! : 5,
+    orderBy: searchParams.has("orderBy")
+      ? (searchParams.get("orderBy")! as TranslationOrdering)
+      : "createdAt",
+    order: searchParams.has("order")
+      ? +searchParams.get("order")!
+      : Order.Descending,
+    sourceLang: searchParams.has("sourceLang")
+      ? +searchParams.get("sourceLang")!
+      : Lang.English,
+    targetLang: searchParams.has("targetLang")
+      ? +searchParams.get("targetLang")!
+      : Lang.Russian,
+    word: searchParams.has("word") ? searchParams.get("word")! : "",
+    partOfSpeech: searchParams.has("partOfSpeech")
+      ? searchParams.getAll("partOfSpeech")!
+      : [],
   };
+}
+
+function serializeQueryState(
+  queryState: GetTranslationsQuery
+): URLSearchParams {
+  const params = { ...queryState };
+  Object.keys(params).forEach((key) => {
+    if (
+      params[key] === undefined ||
+      params[key] === "" ||
+      (Array.isArray(params[key]) && params[key].length === 0)
+    ) {
+      delete params[key];
+    }
+  });
+
+  return new URLSearchParams(params as Record<string, string>);
 }
 
 const orderings = [
   {
     name: "Word",
-    value: TranslationOrdering.Word,
+    value: "word",
   },
   {
     name: "Creation date",
-    value: TranslationOrdering.CreatedAt,
+    value: "createdAt",
   },
   {
     name: "Last viewed",
-    value: TranslationOrdering.LastViewedAt,
+    value: "lastViewedAt",
   },
-] as SelectItem[];
+] as { name: string; value: TranslationOrdering }[];
 
 function WordsLearnPage() {
+  const [searchParams, setSearchParams] = useSearchParams();
   const [showModal, setShowModal] = useState(false);
+  const [deleteTranslationDialog, setDeleteTranslationDialog] = useState({
+    show: false,
+    translationId: "",
+  });
   const showToast = useToast();
-  const [queryState, setQueryState] =
-    useState<GetTranslationsQuery>(getDefaultQueryState);
-
+  const [queryState, setQueryState] = useState<GetTranslationsQuery>(() =>
+    deserializeQueryState(searchParams)
+  );
   const { data, isFetching } = useGetTranslationsQuery(queryState);
   const [deleteTranslation] = useDeleteTranslationMutation();
+
+  useEffect(() => {
+    const searchParams = serializeQueryState(queryState);
+    setSearchParams(searchParams);
+  }, [queryState, setSearchParams]);
 
   function handleSearch(text: string) {
     setQueryState((state) => {
@@ -120,7 +161,11 @@ function WordsLearnPage() {
       <div className={styles.pageContainer}>
         <section className={styles.controls}>
           <div className={styles.controls__search}>
-            <SearchBar onSearch={handleSearch} width={"250px"} />
+            <SearchBar
+              onSearch={handleSearch}
+              width={"250px"}
+              initialValue={queryState.word}
+            />
             <div className={styles.delimeter}></div>
             <Select
               name="orderBy"
@@ -171,7 +216,12 @@ function WordsLearnPage() {
                 <TranslationCard
                   translation={x}
                   key={x.id}
-                  onRemove={handleTranslationDelete}
+                  onRemove={(id) =>
+                    setDeleteTranslationDialog({
+                      show: true,
+                      translationId: id,
+                    })
+                  }
                 />
               ))}
             </div>
@@ -215,6 +265,19 @@ function WordsLearnPage() {
             }}
           />
         </Modal>
+      )}
+
+      {deleteTranslationDialog.show && (
+        <DialogModal
+          message={"Do you want to delete this translation information?"}
+          onConfirm={() => {
+            handleTranslationDelete(deleteTranslationDialog.translationId);
+            setDeleteTranslationDialog({ show: false, translationId: "" });
+          }}
+          onCancel={() =>
+            setDeleteTranslationDialog({ show: false, translationId: "" })
+          }
+        />
       )}
     </>
   );

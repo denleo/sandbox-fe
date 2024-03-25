@@ -9,6 +9,8 @@ export type DeleteTranslationResult = DeleteTranslation & {
   translationResultId: string;
 };
 
+export type ViewTranslation = DeleteTranslation;
+
 export type CreateTranslation = {
   word: string;
   sourceLang: Lang;
@@ -29,11 +31,7 @@ export type GetTranslationsQuery = {
   partOfSpeech?: string[];
 };
 
-export enum TranslationOrdering {
-  Word = "word",
-  CreatedAt = "createdAt",
-  LastViewedAt = "lastViewedAt",
-}
+export type TranslationOrdering = "word" | "createdAt" | "lastViewedAt";
 
 //-------------------------Payloads------------------------------
 
