@@ -10,12 +10,12 @@ export type TranslationLangOptionsProps = {
   onChange: (direction: TranslationDirection) => void;
 };
 
-const possibleTranslationDirections = {
-  [Lang.Russian]: [Lang.English, Lang.Ukraine, Lang.Poland],
-  [Lang.English]: [Lang.Russian, Lang.Ukraine],
-  [Lang.Ukraine]: [Lang.Russian, Lang.English],
-  [Lang.Poland]: [Lang.Russian],
-};
+const directionsMap = new Map<Lang, Lang[]>([
+  [Lang.Russian, [Lang.English, Lang.Ukraine, Lang.Poland]],
+  [Lang.English, [Lang.Russian, Lang.Ukraine]],
+  [Lang.Ukraine, [Lang.Russian, Lang.English]],
+  [Lang.Poland, [Lang.Russian]],
+]);
 
 function TranslationLangOptions({
   translationDirection,
@@ -25,26 +25,26 @@ function TranslationLangOptions({
     <div className={styles.container}>
       <section className={styles.translationLang}>
         <div className={styles.translationLang__column}>
-          {Object.keys(possibleTranslationDirections).map((value) => (
+          {Array.from(directionsMap).map(([key, value]) => (
             <h3
               onClick={() =>
                 onChange({
-                  sourceLang: +value,
-                  targetLang: possibleTranslationDirections[+value][0],
+                  sourceLang: key,
+                  targetLang: value[0],
                 })
               }
               className={
                 styles.langOption +
-                (+value === translationDirection.sourceLang
+                (key === translationDirection.sourceLang
                   ? ` ${styles.active}`
                   : "")
               }
               style={{
-                backgroundColor: langColors[value],
+                backgroundColor: langColors[key],
               }}
-              key={"source_" + value}
+              key={"source_" + key}
             >
-              {Lang[+value]}
+              {Lang[key]}
             </h3>
           ))}
         </div>
@@ -52,8 +52,9 @@ function TranslationLangOptions({
           <i className="fa-solid fa-hand-point-right fa-xl"></i>
         </div>
         <div className={styles.translationLang__column}>
-          {possibleTranslationDirections[translationDirection.sourceLang].map(
-            (targetLang) => (
+          {directionsMap
+            .get(translationDirection.sourceLang)!
+            .map((targetLang) => (
               <h3
                 onClick={() =>
                   onChange({
@@ -74,8 +75,7 @@ function TranslationLangOptions({
               >
                 {Lang[targetLang]}
               </h3>
-            )
-          )}
+            ))}
         </div>
       </section>
     </div>

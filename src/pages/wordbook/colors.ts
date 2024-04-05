@@ -6,7 +6,6 @@ export const partOfSpeechColors = {
   Adjective: "#52A666",
   Adverb: "#C4C4FC",
   Predicative: "#C15B4E",
-  //"Артикль / детерминатив": "#B9A898",
   Participle: "#4A2668",
   Particle: "#86A59C",
   Pronoun: "#ECA72C",

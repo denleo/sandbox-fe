@@ -4,7 +4,7 @@ import WordCard from "../../../components/wordCard/WordCard.tsx";
 import Modal from "../../../components/modal/Modal.tsx";
 import TranslationLangOptions from "./filters/TranslationLangOptions.tsx";
 import Spinner from "../../../components/spinner/Spinner.tsx";
-import notFoundImg from "../../../assets/images/not-found-person.jpg";
+import emptySearchResult from "../../../assets/images/emptySearchResult.svg";
 import {
   useTypedDispatch,
   useTypedSelector,
@@ -87,7 +87,7 @@ export default function WordsSearchPage() {
   } else if (result.data.length === 0) {
     resultNode = (
       <div className={styles.notFoundContainer}>
-        <img src={notFoundImg} className={styles.notFoundImage}></img>
+        <img src={emptySearchResult} className={styles.notFoundImage}></img>
         <h1 className={styles.notFoundTitle}>
           Sorry, we can't find any translations...
         </h1>
